@@ -1,32 +1,32 @@
 {
   "name": "Vasabi — Fast Food",
   "short_name": "Vasabi",
-  "start_url": "./vasabi_pwa_index.html",
+  "start_url": "/test/vasabi_pwa_index.html",
   "display": "standalone",
   "background_color": "#f7f7f5",
   "theme_color": "#ff5a36",
   "description": "Шаурма, бургеры, пицца, суши, донар и закуски.",
   "icons": [
     {
-      "src": "android/android-launchericon-192-192.png",
+      "src": "/test/android/android-launchericon-192-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "android/android-launchericon-192-192.png",
+      "src": "/test/android/android-launchericon-192-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "android/android-launchericon-512-512.png",
+      "src": "/test/android/android-launchericon-512-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "android/android-launchericon-512-512.png",
+      "src": "/test/android/android-launchericon-512-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
