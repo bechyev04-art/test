@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="./manifest.json"><meta name="theme-color" content="#ff5a36">
+<title>Vasabi — Fast Food</title>
+<style>
+:root{
+  --bg:#f7f7f5; --card:#fff; --text:#171717; --muted:#777;
+  --accent:#ff5a36; --accent2:#ff8a3d; --green:#1f9d62;
+  --border:#ececea; --shadow:0 12px 35px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button{font:inherit;border:0;cursor:pointer}
+.app{max-width:1250px;margin:auto;padding:20px}
+header{display:flex;align-items:center;justify-content:space-between;padding:8px 0 24px}
+.logo{display:flex;align-items:center;gap:11px;font-weight:900;font-size:29px;letter-spacing:-1px}
+.logo-mark{width:46px;height:46px;border-radius:15px;background:#171717;color:white;display:grid;place-items:center;font-size:25px}
+.logo-mark:after{content:"🍣"}
+.header-actions{display:flex;gap:10px;align-items:center}
+.pill{background:white;border:1px solid var(--border);padding:11px 15px;border-radius:14px;font-weight:700}
+.hero{background:linear-gradient(120deg,#171717,#292929);border-radius:28px;color:white;padding:34px 38px;display:flex;justify-content:space-between;overflow:hidden;position:relative;box-shadow:var(--shadow)}
+.hero h1{font-size:46px;line-height:1;margin:0 0 12px;max-width:600px;letter-spacing:-2px}
+.hero p{color:#cfcfcf;font-size:16px;margin:0 0 22px}
+.hero-badge{background:#fff;color:#171717;padding:12px 17px;border-radius:14px;display:inline-block;font-weight:800}
+.hero-food{font-size:115px;align-self:center;transform:rotate(-8deg);filter:drop-shadow(0 15px 20px rgba(0,0,0,.3))}
+.categories{display:flex;gap:10px;overflow:auto;padding:24px 0 12px}
+.cat{padding:12px 18px;border-radius:999px;background:white;border:1px solid var(--border);font-weight:800;white-space:nowrap}
+.cat.active{background:var(--accent);color:white;border-color:var(--accent)}
+.layout{display:grid;grid-template-columns:1fr 330px;gap:24px;margin-top:15px}
+.section-head{display:flex;justify-content:space-between;align-items:end;margin:8px 0 17px}
+.section-head h2{margin:0;font-size:28px}.status{color:var(--green);font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:12px;box-shadow:0 5px 20px rgba(0,0,0,.035);transition:.2s}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.food-img{height:150px;border-radius:17px;background:linear-gradient(135deg,#f4eee7,#fafafa);display:grid;place-items:center;font-size:82px;position:relative}
+.stock{position:absolute;top:9px;left:9px;background:white;padding:6px 9px;border-radius:9px;font-size:11px;font-weight:800}
+.stock.low{color:#d87500}.stock.ok{color:var(--green)}
+.card h3{margin:13px 4px 5px;font-size:18px}.desc{font-size:13px;color:var(--muted);margin:0 4px 13px;min-height:31px}
+.bottom{display:flex;justify-content:space-between;align-items:center;margin:0 3px 3px}
+.price{font-size:18px;font-weight:900}
+.add{width:39px;height:39px;border-radius:13px;background:var(--accent);color:white;font-size:25px;font-weight:700}
+.cart{background:white;border:1px solid var(--border);border-radius:24px;padding:20px;box-shadow:var(--shadow);position:sticky;top:15px;height:max-content}
+.cart h2{margin:0 0 5px}.cart-sub{color:var(--muted);font-size:13px;margin-bottom:17px}
+.cart-items{display:flex;flex-direction:column;gap:11px;max-height:310px;overflow:auto}
+.cart-item{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;padding:9px;background:#fafafa;border-radius:14px}
+.mini{width:42px;height:42px;border-radius:12px;background:#eee;display:grid;place-items:center;font-size:25px}
+.item-name{font-weight:800;font-size:13px}.item-price{font-size:12px;color:var(--muted);margin-top:3px}
+.qty{display:flex;align-items:center;gap:6px}.qty button{width:24px;height:24px;border-radius:8px;background:#fff;border:1px solid #ddd}
+.empty{text-align:center;color:#999;padding:35px 5px}
+.totals{border-top:1px solid var(--border);margin-top:17px;padding-top:14px}
+.row{display:flex;justify-content:space-between;margin:7px 0;color:#666}.row.total{color:#111;font-size:20px;font-weight:900;margin-top:12px}
+.checkout{width:100%;background:var(--accent);color:white;padding:15px;border-radius:15px;font-weight:900;margin-top:15px}
+.delivery{background:#f1fbf5;color:#187a4b;padding:12px;border-radius:13px;font-size:12px;margin-top:12px}
+.order-modal{position:fixed;inset:0;background:rgba(0,0,0,.48);display:none;place-items:center;padding:20px;z-index:10}
+.modal{background:white;border-radius:25px;padding:28px;max-width:430px;width:100%;text-align:center}
+.modal .big{font-size:60px}.modal h2{margin:5px}.modal p{color:#777}.close{background:#171717;color:white;padding:12px 22px;border-radius:12px;font-weight:800}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.cart{position:static}.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.app{padding:12px}.hero{padding:25px}.hero h1{font-size:34px}.hero-food{font-size:70px}.grid{grid-template-columns:1fr 1fr}.food-img{height:125px;font-size:62px}.header-actions .pill:first-child{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="logo"><div class="logo-mark">🍣</div>vasabi</div>
+  <div class="header-actions"><div class="pill">🟢 Открыто</div><div class="pill">🚚 25–40 мин</div></div>
+</header>
+
+<section class="hero">
+  <div>
+    <h1>Голодным быть<br>не обязательно.</h1>
+    <p>Шаурма, бургеры, пицца, суши и ещё куча вкусного — в одном месте.</p>
+    <span class="hero-badge">🔥 Популярное: комбо от 9,90 €</span>
+  </div>
+  <div class="hero-food">🍔🍣</div>
+</section>
+
+<nav class="categories" id="categories"></nav>
+
+<div class="layout">
+  <main>
+    <div class="section-head"><h2 id="sectionTitle">Всё меню</h2><span class="status">● Сейчас работаем</span></div>
+    <div class="grid" id="products"></div>
+  </main>
+  <aside class="cart">
+    <h2>Ваш заказ 🛒</h2>
+    <div class="cart-sub">Минимальный заказ — 8 €</div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="totals">
+      <div class="row"><span>Товары</span><span id="subtotal">0,00 €</span></div>
+      <div class="row"><span>Доставка</span><span id="delivery">2,50 €</span></div>
+      <div class="row total"><span>Итого</span><span id="total">0,00 €</span></div>
+      <button class="checkout" onclick="checkout()">Оформить заказ</button>
+      <div class="delivery">⚡ Доставка курьером • ориентировочно 25–40 минут</div>
+    </div>
+  </aside>
+</div>
+</div>
+
+<div class="order-modal" id="modal">
+  <div class="modal">
+    <div class="big">🎉</div>
+    <h2>Заказ принят!</h2>
+    <p id="orderText">Ваш заказ уже передан на кухню.</p>
+    <button class="close" onclick="closeModal()">Отлично</button>
+  </div>
+</div>
+
+<script>
+const categories = ["Все","🍣 Суши","🌯 Шаурма","🍔 Бургеры","🍕 Пицца","🥙 Донар","🍟 Закуски","🥤 Напитки"];
+const products = [
+ {id:1,cat:"Суши",name:"Филадельфия",desc:"Лосось, сливочный сыр, огурец",price:8.90,stock:12,emoji:"🍣"},
+ {id:2,cat:"Суши",name:"Калифорния",desc:"Краб, авокадо, икра тобико",price:7.90,stock:8,emoji:"🍣"},
+ {id:3,cat:"Суши",name:"Сет Васаби",desc:"24 шт. • ассорти роллов",price:19.90,stock:5,emoji:"🍱"},
+ {id:4,cat:"Шаурма",name:"Шаурма классик",desc:"Курица, овощи, фирменный соус",price:7.50,stock:14,emoji:"🌯"},
+ {id:5,cat:"Шаурма",name:"Шаурма XXL",desc:"Двойное мясо, сыр, овощи",price:9.90,stock:6,emoji:"🌯"},
+ {id:6,cat:"Бургеры",name:"Vasabi Burger",desc:"Говядина, чеддер, соус васаби",price:10.50,stock:9,emoji:"🍔"},
+ {id:7,cat:"Бургеры",name:"Chicken Burger",desc:"Хрустящая курица, салат, соус",price:8.90,stock:11,emoji:"🍔"},
+ {id:8,cat:"Пицца",name:"Пепперони",desc:"Томатный соус, моцарелла, пепперони",price:11.90,stock:7,emoji:"🍕"},
+ {id:9,cat:"Пицца",name:"4 сыра",desc:"Моцарелла, дорблю, пармезан, гауда",price:12.50,stock:4,emoji:"🍕"},
+ {id:10,cat:"Донар",name:"Донар",desc:"Мясо, салат, картофель, соус",price:8.50,stock:10,emoji:"🥙"},
+ {id:11,cat:"Закуски",name:"Картофель фри",desc:"Хрустящий картофель с солью",price:3.50,stock:20,emoji:"🍟"},
+ {id:12,cat:"Напитки",name:"Cola",desc:"Холодная газировка 0,5 л",price:2.50,stock:24,emoji:"🥤"}
+];
+let active="Все", cart={};
+
+function renderCategories(){
+ document.getElementById("categories").innerHTML=categories.map(c=>
+ `<button class="cat ${c.startsWith(active)||active===c?'active':''}" onclick="setCategory('${c}')">${c}</button>`).join("");
+}
+function setCategory(c){
+ active=c.replace(/^.*? /,'').replace("Все","Все");
+ if(c==="Все") active="Все";
+ document.getElementById("sectionTitle").textContent=active==="Все"?"Всё меню":active;
+ renderCategories(); renderProducts();
+}
+function renderProducts(){
+ const list=active==="Все"?products:products.filter(p=>p.cat===active);
+ document.getElementById("products").innerHTML=list.map(p=>`
+ <article class="card">
+  <div class="food-img"><span class="stock ${p.stock<=5?'low':'ok'}">${p.stock<=5?'Осталось мало':'В наличии'}: ${p.stock}</span>${p.emoji}</div>
+  <h3>${p.name}</h3><p class="desc">${p.desc}</p>
+  <div class="bottom"><span class="price">${p.price.toFixed(2).replace('.',',')} €</span><button class="add" onclick="add(${p.id})">+</button></div>
+ </article>`).join("");
+}
+function add(id){
+ if(!cart[id]) cart[id]=0;
+ if(cart[id]<products.find(p=>p.id===id).stock) cart[id]++;
+ renderCart();
+}
+function change(id,n){
+ cart[id]=(cart[id]||0)+n;
+ if(cart[id]<=0) delete cart[id];
+ renderCart();
+}
+function renderCart(){
+ const el=document.getElementById("cartItems");
+ const ids=Object.keys(cart);
+ if(!ids.length){el.innerHTML='<div class="empty">Корзина пока пустая 🍽️<br>Добавьте что-нибудь вкусное</div>';}
+ else el.innerHTML=ids.map(id=>{
+  const p=products.find(x=>x.id==id);
+  return `<div class="cart-item"><div class="mini">${p.emoji}</div><div><div class="item-name">${p.name}</div><div class="item-price">${p.price.toFixed(2).replace('.',',')} € × ${cart[id]}</div></div><div class="qty"><button onclick="change(${id},-1)">−</button><b>${cart[id]}</b><button onclick="change(${id},1)">+</button></div></div>`
+ }).join("");
+ const subtotal=ids.reduce((s,id)=>s+products.find(p=>p.id==id).price*cart[id],0);
+ const delivery=subtotal?2.5:0;
+ document.getElementById("subtotal").textContent=subtotal.toFixed(2).replace('.',',')+" €";
+ document.getElementById("delivery").textContent=delivery?delivery.toFixed(2).replace('.',',')+" €":"0,00 €";
+ document.getElementById("total").textContent=(subtotal+delivery).toFixed(2).replace('.',',')+" €";
+}
+function checkout(){
+ const ids=Object.keys(cart);
+ const subtotal=ids.reduce((s,id)=>s+products.find(p=>p.id==id).price*cart[id],0);
+ if(subtotal<8){alert("Минимальная сумма заказа — 8,00 €");return}
+ document.getElementById("orderText").textContent=`Сумма ${ (subtotal+2.5).toFixed(2).replace('.',',') } €. Курьер будет у вас примерно через 25–40 минут.`;
+ document.getElementById("modal").style.display="grid";
+ cart={}; renderCart();
+}
+function closeModal(){document.getElementById("modal").style.display="none"}
+renderCategories();renderProducts();renderCart();
+</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./service-worker.js").catch(()=>{});}</script></body>
+</html>
